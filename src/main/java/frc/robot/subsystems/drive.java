@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -22,6 +23,12 @@ public class drive {
     private final MotionMagicVoltage motor2request = new MotionMagicVoltage(0.0);
     private final MotionMagicVoltage motor3request = new MotionMagicVoltage(0.0);
     private final MotionMagicVoltage motor4request = new MotionMagicVoltage(0.0);
+
+    
+    private final VelocityTorqueCurrentFOC motor1velocity = new VelocityTorqueCurrentFOC(0.0).withSlot(1);
+    private final VelocityTorqueCurrentFOC motor2velocity = new VelocityTorqueCurrentFOC(0.0).withSlot(1);
+    private final VelocityTorqueCurrentFOC motor3velocity = new VelocityTorqueCurrentFOC(0.0).withSlot(1);
+    private final VelocityTorqueCurrentFOC motor4velocity = new VelocityTorqueCurrentFOC(0.0).withSlot(1);
 
     private final VoltageOut motor1voltage = new VoltageOut(0.0);
     private final VoltageOut motor2voltage = new VoltageOut(0.0);
@@ -53,11 +60,18 @@ public class drive {
         motor4.getConfigurator().apply(motorConfigs);
     }
 
-    public void setMotors(double pos) {
+    public void setMotorpos(double pos) {
         motor1.setControl(motor1request.withPosition(pos));
         motor2.setControl(motor2request.withPosition(pos));
         motor3.setControl(motor3request.withPosition(pos));
         motor4.setControl(motor4request.withPosition(pos));
+    }
+
+    public void setMotorvelocity(double Velocity) {
+        motor1.setControl(motor1velocity.withVelocity(Velocity));
+        motor2.setControl(motor1velocity.withVelocity(Velocity));
+        motor3.setControl(motor1velocity.withVelocity(Velocity));
+        motor4.setControl(motor1velocity.withVelocity(Velocity));
     }
 
     public void setMotorsv(double v) {
@@ -84,6 +98,19 @@ public class drive {
         },
         ()->{
             motor2.setControl(motor1request.withPosition(-v)); 
+        }
+        );
+        
+    }
+
+    public Command driveCommandvelocity(double velocity){
+        return Commands.startEnd(
+            () -> {  
+                setMotorvelocity(velocity);
+        },
+        ()->{
+            
+                setMotorvelocity(0);
         }
         );
         

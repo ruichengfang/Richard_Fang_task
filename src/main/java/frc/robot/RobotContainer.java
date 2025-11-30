@@ -16,7 +16,6 @@ public class RobotContainer {
   }
   private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private void configureBindings() {
-    m_driverController.a().whileTrue(drivesystem.driveCommand1(100));
-    m_driverController.b().whileTrue(drivesystem.driveCommand1(100));
+    m_driverController.a().whileTrue(drivesystem.driveCommandvelocity(50));
   }
 }
