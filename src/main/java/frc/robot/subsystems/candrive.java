@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 
 @SuppressWarnings("unused")
-public class drive {
+public class candrive {
     private final TalonFX motor1 = new TalonFX(Constants.driveconstants.motor1id);
     private final TalonFX motor2 = new TalonFX(Constants.driveconstants.motor2id);
     private final TalonFX motor3 = new TalonFX(Constants.driveconstants.motor3id);
@@ -35,7 +35,13 @@ public class drive {
     private final VoltageOut motor3voltage = new VoltageOut(0.0);
     private final VoltageOut motor4voltage = new VoltageOut(0.0);
 
+    private final CANcoder test_cancoder1 = new CANcoder(Constants.driveconstants.cancoder1ID, "rio");
+
     public drive() {
+        var motorEncoderConfigs = new CANcoderConfiguration();
+        motorEncoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint=0.5;//电机180°对应范围
+        motorEncoderConfigs.MagnetSensor.SensorDirection=SensorDirectionValue.Clockwise_Positive;
+        motorEncoderConfigs.MagnetSensor.MagnetOffset=-0.077393;//FL
         var motorConfigs = new TalonFXConfiguration();
 
         motorConfigs.Slot0.kS = 0.14;
@@ -54,10 +60,17 @@ public class drive {
         motorConfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         motorConfigs.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
+        motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        motorConfigs.Feedback.RotorToSensorRatio = 5;
+        motorConfigs.Feedback.FeedbackRemoteSensorID = test_cancoder1.getDeviceID();
+
         motor1.getConfigurator().apply(motorConfigs);
         motor2.getConfigurator().apply(motorConfigs);
         motor3.getConfigurator().apply(motorConfigs);
         motor4.getConfigurator().apply(motorConfigs);
+
+        
+        
     }
 
     public void setMotorpos(double pos) {

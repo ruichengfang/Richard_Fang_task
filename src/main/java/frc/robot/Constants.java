@@ -21,5 +21,6 @@ public final class Constants {
     public static final int motor2id = 2;
     public static final int motor3id = 3;
     public static final int motor4id = 4;
+    public static final int cancoder1ID = 10;
   }
 }
